@@ -1,0 +1,88 @@
+import { Command } from '../Command.js';
+import * as Commands from './Commands.js';
+
+class MultiCmdsCommand extends Command {
+
+	/**
+	 * @param {Editor} editor
+	 * @param {Array<Command>} [cmdArray=[]]
+	 * @constructor
+	 */
+	constructor( editor, cmdArray = [] ) {
+
+		super( editor );
+
+		this.type = 'MultiCmdsCommand';
+		this.name = editor.strings.getKey( 'command/MultiCmds' );
+
+		this.cmdArray = cmdArray;
+
+	}
+
+	execute() {
+
+		this.editor.signals.sceneGraphChanged.active = false;
+
+		for ( let i = 0; i < this.cmdArray.length; i ++ ) {
+
+			this.cmdArray[ i ].execute();
+
+		}
+
+		this.editor.signals.sceneGraphChanged.active = true;
+		this.editor.signals.sceneGraphChanged.dispatch();
+
+	}
+
+	undo() {
+
+		this.editor.signals.sceneGraphChanged.active = false;
+
+		for ( let i = this.cmdArray.length - 1; i >= 0; i -- ) {
+
+			this.cmdArray[ i ].undo();
+
+		}
+
+		this.editor.signals.sceneGraphChanged.active = true;
+		this.editor.signals.sceneGraphChanged.dispatch();
+
+	}
+
+	toJSON() {
+
+		const output = super.toJSON( this );
+
+		const cmds = [];
+		for ( let i = 0; i < this.cmdArray.length; i ++ ) {
+
+			cmds.push( this.cmdArray[ i ].toJSON() );
+
+		}
+
+		output.cmds = cmds;
+
+		return output;
+
+	}
+
+	fromJSON( json ) {
+
+		super.fromJSON( json );
+
+		const cmds = json.cmds;
+		for ( let i = 0; i < cmds.length; i ++ ) {
+
+			const CommandType = Commands[ cmds[ i ].type ];
+			if ( typeof CommandType !== 'function' ) throw new Error( 'Unknown history command' );
+			const cmd = new CommandType( this.editor );
+			cmd.fromJSON( cmds[ i ] );
+			this.cmdArray.push( cmd );
+
+		}
+
+	}
+
+}
+
+export { MultiCmdsCommand };

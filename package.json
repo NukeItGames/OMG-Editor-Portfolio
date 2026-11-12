@@ -1,0 +1,46 @@
+{
+  "name": "omg-editor",
+  "version": "1.6.6",
+  "description": "OMG Editor - A 3D editor built on Three.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predev": "node scripts/prepare-runtime.mjs",
+    "prebuild": "node scripts/prepare-runtime.mjs",
+    "check": "node scripts/check-syntax.mjs",
+    "test": "playwright test",
+    "tauri": "tauri",
+    "demo": "node scripts/capture-demo.mjs"
+  },
+  "keywords": [
+    "threejs",
+    "scene-editor",
+    "tauri",
+    "3d",
+    "javascript",
+    "rust"
+  ],
+  "author": "NukeItGames",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@tauri-apps/cli": "^2.10.1",
+    "vite": "^8.3.8"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/plugin-dialog": "^2.7.0",
+    "@tauri-apps/plugin-fs": "^2.5.0",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "three": "^0.183.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NukeItGames/OMG-Editor-Portfolio.git"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
